@@ -1,6 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myuseum/Utils/getAPI.dart';
+import 'dart:convert';
+String urlBase = "https://cop-4331-large-project.herokuapp.com";
 
 void main() {
   runApp(MyApp());
@@ -22,11 +26,144 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginRoute(),
     );
   }
+}
+
+class LoginRoute extends StatelessWidget {
+  @override
+  String _username = "";
+  String _password = "";
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+
+      body: Center(
+          child: Column(
+            children: [
+              TextField(
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(labelText: 'Email',),
+                  onChanged: (text) {
+                    _username = text;
+                  }
+              ),
+              TextField(
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(labelText: 'Password',),
+                  obscureText: true,
+                  onChanged: (text) {
+                    _password = text;
+                  }
+              ),
+              ElevatedButton(
+                child: Text('Login'),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage(title: 'Homepage')),
+                  );
+                },
+              ),
+              ElevatedButton(
+                child: Text('Register'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterRoute()),
+                  );
+                },
+              ),
+            ],
+          )
+      ),
+    );
+  }
+}
+
+class RegisterRoute extends StatefulWidget {
+  @override
+  _RegisterRouteState createState() => _RegisterRouteState();
+}
+
+class _RegisterRouteState extends State<RegisterRoute> {
+  @override
+
+  String _email = "";
+  String _firstName = "";
+  String _lastName = "";
+  String _password = "";
+  String _output = "";
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Register'),
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              TextField(
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(labelText: 'Email',),
+                  onChanged: (text) {
+                    _email = text;
+                  }
+              ),
+              TextField(
+                  textAlign: TextAlign.center,
+                  onChanged: (text) {
+                    _firstName = text;
+                  }
+              ),
+              TextField(
+                  textAlign: TextAlign.center,
+                  onChanged: (text) {
+                    _lastName = text;
+                  }
+              ),
+              TextField(
+                  obscureText: true,
+                  textAlign: TextAlign.center,
+                  onChanged: (text) {
+                    _password = text;
+                  }
+              ),
+              Text(
+                  '$_output'
+              ),
+              FloatingActionButton (
+                onPressed: _login,
+                child: Text('Login'),
+              ),
+            ],
+          ),
+        )
+    );
+    return Container();
+  }
+
+  void _login() {
+    setState(() {
+      _output = "Registering...";
+    });
+    String content = '{"email": "' + _email + '","firstName": "' +
+        _firstName + '","lastName": "' + _lastName + '","password": "' +
+        _password + '"}';
+    String registerURL = urlBase + "/users/register";
+    Register.sendRegister(registerURL, content).then((value) {
+      setState(() {
+        _output = value;
+      });
+    });
+  }
+
 }
 
 class MyHomePage extends StatefulWidget {
@@ -49,6 +186,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _output = "";
+  String _email = "";
+  String _password = "";
+  String _firstName = "";
+  String _lastName = "";
 
   void _incrementCounter() {
     setState(() {
@@ -58,6 +200,21 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+    });
+  }
+
+  void _demoRegister() {
+    setState(() {
+      _output = "Registering...";
+    });
+    String content = '{"email": "' + _email + '","firstName": "' +
+        _firstName + '","lastName": "' + _lastName + '","password": "' +
+        _password + '"}';
+    String registerURL = urlBase + "/users/register";
+    Register.sendRegister(registerURL, content).then((value) {
+      setState(() {
+        _output = value;
+      });
     });
   }
 
@@ -96,17 +253,45 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'You have tapped the button this many times:',
             ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            TextField(
+                textAlign: TextAlign.center,
+                onChanged: (text) {
+                  _email = text;
+                }
+            ),
+            TextField(
+                textAlign: TextAlign.center,
+                onChanged: (text) {
+                  _firstName = text;
+                }
+            ),
+            TextField(
+                textAlign: TextAlign.center,
+                onChanged: (text) {
+                  _lastName = text;
+                }
+            ),
+            TextField(
+                obscureText: true,
+                textAlign: TextAlign.center,
+                onChanged: (text) {
+                  _password = text;
+                }
+            ),
+            Text(
+                '$_output'
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _demoRegister,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

@@ -86,6 +86,15 @@ class _LoginRouteState extends State<LoginRoute> {
                   );
                 },
               ),
+              ElevatedButton(
+                child: Text('Forgot Password'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ForgotPasswordRoute()),
+                  );
+                },
+              ),
             ],
           )
       ),
@@ -203,6 +212,84 @@ class _RegisterRouteState extends State<RegisterRoute> {
   }
 
 }
+
+class ForgotPasswordRoute extends StatefulWidget {
+  @override
+  _ForgotPasswordRouteState createState() => _ForgotPasswordRouteState();
+}
+
+class _ForgotPasswordRouteState extends State<ForgotPasswordRoute> {
+  @override
+
+  String _output = "";
+  String _email = "";
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Login'),
+        ),
+
+        body: Center(
+          child: Column(
+            children: [
+              TextField(
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(labelText: 'Email'),
+                onChanged: (text) {
+                  _email = text;
+                },
+              ),
+              ElevatedButton(
+                onPressed: _forgotPassword,
+                child:
+                    Text('Submit'),
+              ),
+              Text('$_output'),
+            ]
+          )
+        ),
+    );
+    return Container();
+  }
+
+  void _forgotPassword() {
+    setState(() {
+      _output = "Sending...";
+    });
+    String content = '{"email": "' + _email + '"';
+    String registerURL = urlBase + "/users/forgotPassword";
+    Register.sendRegister(registerURL, content).then((value) {
+      if(value.compareTo("200") == 0) {
+        setState(() {
+          _output = 'Email sent';
+        });
+      }
+      else if(value.compareTo("400") == 0) {
+        setState(() {
+          _output = 'Email required';
+        });
+      }
+      else if(value.compareTo("404") == 0) {
+        setState(() {
+          _output = 'Email does not exist';
+        });
+      }
+      else if(value.compareTo("503") == 0) {
+        setState(() {
+          _output = 'Email failed to send';
+        });
+      }
+      else
+      {
+        setState(() {
+          _output = 'Error ' + value;
+        });
+      }
+    });
+  }
+}
+
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);

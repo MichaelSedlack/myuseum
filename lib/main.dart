@@ -33,10 +33,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginRoute extends StatelessWidget {
+class LoginRoute extends StatefulWidget {
   @override
-  String _username = "";
+  _LoginRouteState createState() => _LoginRouteState();
+}
+
+class _LoginRouteState extends State<LoginRoute> {
+  @override
+  String _email = "";
   String _password = "";
+  String _loginStatus = "";
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +57,7 @@ class LoginRoute extends StatelessWidget {
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(labelText: 'Email',),
                   onChanged: (text) {
-                    _username = text;
+                    _email = text;
                   }
               ),
               TextField(
@@ -65,11 +71,11 @@ class LoginRoute extends StatelessWidget {
               ElevatedButton(
                 child: Text('Login'),
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHomePage(title: 'Homepage')),
-                  );
+                  _login(context);
                 },
+              ),
+              Text(
+                '$_loginStatus',
               ),
               ElevatedButton(
                 child: Text('Register'),
@@ -84,6 +90,38 @@ class LoginRoute extends StatelessWidget {
           )
       ),
     );
+    return Container();
+  }
+
+  void _login(BuildContext context) {
+    setState(() {
+      _loginStatus = 'Logging in';
+    });
+    String output = "";
+    String registerURL = urlBase + "/users/login";
+    String content = '{"email": "' + _email + '","password": "' +
+        _password + '"}';
+    Register.sendRegister(registerURL, content).then((value) {
+      output = value;
+      if(output.compareTo('200') == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage(title: 'Homepage')),
+        );
+      }
+      else if(output.compareTo('400') == 0)
+      {
+        setState(() {
+          _loginStatus = 'Wrong password or email';
+        });
+      }
+      else
+      {
+        setState(() {
+          _loginStatus = 'error: ' + output;
+        });
+      }
+    });
   }
 }
 
@@ -138,9 +176,9 @@ class _RegisterRouteState extends State<RegisterRoute> {
               Text(
                   '$_output'
               ),
-              FloatingActionButton (
-                onPressed: _login,
-                child: Text('Login'),
+              ElevatedButton (
+                onPressed: _register,
+                child: Text('Register'),
               ),
             ],
           ),
@@ -149,7 +187,7 @@ class _RegisterRouteState extends State<RegisterRoute> {
     return Container();
   }
 
-  void _login() {
+  void _register() {
     setState(() {
       _output = "Registering...";
     });

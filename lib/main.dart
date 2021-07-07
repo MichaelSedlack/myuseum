@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:myuseum/Utils/getAPI.dart';
-import 'dart:convert';
+import 'package:myuseum/register.dart';
+
 String urlBase = "https://cop-4331-large-project.herokuapp.com";
 
 void main() {
@@ -134,84 +132,7 @@ class _LoginRouteState extends State<LoginRoute> {
   }
 }
 
-class RegisterRoute extends StatefulWidget {
-  @override
-  _RegisterRouteState createState() => _RegisterRouteState();
-}
 
-class _RegisterRouteState extends State<RegisterRoute> {
-  @override
-
-  String _email = "";
-  String _firstName = "";
-  String _lastName = "";
-  String _password = "";
-  String _output = "";
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Register'),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Email',),
-                  onChanged: (text) {
-                    _email = text;
-                  }
-              ),
-              TextField(
-                  textAlign: TextAlign.center,
-                  onChanged: (text) {
-                    _firstName = text;
-                  }
-              ),
-              TextField(
-                  textAlign: TextAlign.center,
-                  onChanged: (text) {
-                    _lastName = text;
-                  }
-              ),
-              TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  onChanged: (text) {
-                    _password = text;
-                  }
-              ),
-              Text(
-                  '$_output'
-              ),
-              ElevatedButton (
-                onPressed: _register,
-                child: Text('Register'),
-              ),
-            ],
-          ),
-        )
-    );
-    return Container();
-  }
-
-  void _register() {
-    setState(() {
-      _output = "Registering...";
-    });
-    String content = '{"email": "' + _email + '","firstName": "' +
-        _firstName + '","lastName": "' + _lastName + '","password": "' +
-        _password + '"}';
-    String registerURL = urlBase + "/users/register";
-    Register.sendRegister(registerURL, content).then((value) {
-      setState(() {
-        _output = value;
-      });
-    });
-  }
-
-}
 
 class ForgotPasswordRoute extends StatefulWidget {
   @override
@@ -311,35 +232,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  String _output = "";
-  String _email = "";
-  String _password = "";
-  String _firstName = "";
-  String _lastName = "";
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
-    });
-  }
-
-  void _demoRegister() {
-    setState(() {
-      _output = "Registering...";
-    });
-    String content = '{"email": "' + _email + '","firstName": "' +
-        _firstName + '","lastName": "' + _lastName + '","password": "' +
-        _password + '"}';
-    String registerURL = urlBase + "/users/register";
-    Register.sendRegister(registerURL, content).then((value) {
-      setState(() {
-        _output = value;
-      });
     });
   }
 
@@ -384,39 +280,12 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            TextField(
-                textAlign: TextAlign.center,
-                onChanged: (text) {
-                  _email = text;
-                }
-            ),
-            TextField(
-                textAlign: TextAlign.center,
-                onChanged: (text) {
-                  _firstName = text;
-                }
-            ),
-            TextField(
-                textAlign: TextAlign.center,
-                onChanged: (text) {
-                  _lastName = text;
-                }
-            ),
-            TextField(
-                obscureText: true,
-                textAlign: TextAlign.center,
-                onChanged: (text) {
-                  _password = text;
-                }
-            ),
-            Text(
-                '$_output'
-            ),
+
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _demoRegister,
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

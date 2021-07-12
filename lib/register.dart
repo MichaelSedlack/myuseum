@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/getAPI.dart';
-String urlBase = "https://cop-4331-large-project.herokuapp.com";
+import 'main.dart';
 
 class RegisterRoute extends StatefulWidget {
   @override
@@ -8,8 +8,6 @@ class RegisterRoute extends StatefulWidget {
 }
 
 class _RegisterRouteState extends State<RegisterRoute> {
-  @override
-
   //Values used throughout the state
   String _email = "";
   String _firstName = "";
@@ -23,49 +21,61 @@ class _RegisterRouteState extends State<RegisterRoute> {
           title: Text('Register'),
         ),
         body: Center(
-          child: Column(
-            children: [
-              TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Email',),
-                  onChanged: (text) {
-                    _email = text;
-                  }
-              ),
-              TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'First Name',),
-                  onChanged: (text) {
-                    _firstName = text;
-                  }
-              ),
-              TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Last Name',),
-                  onChanged: (text) {
-                    _lastName = text;
-                  }
-              ),
-              TextField(
-                  obscureText: true,
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Password',),
-                  onChanged: (text) {
-                    _password = text;
-                  }
-              ),
-              Text(
-                  '$_output'
-              ),
-              ElevatedButton (
-                onPressed: _register,
-                child: Text('Register'),
-              ),
-            ],
-          ),
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child:
+              Column(
+                children: [
+                  TextField(
+                    textAlign: TextAlign.center,
+                    decoration: InputDecoration(labelText: 'Email',),
+                    onChanged: (text) {
+                      _email = text;
+                    }
+                  ),
+                  TextField(
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(labelText: 'First Name',),
+                      onChanged: (text) {
+                        _firstName = text;
+                      }
+                  ),
+                  TextField(
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(labelText: 'Last Name',),
+                      onChanged: (text) {
+                        _lastName = text;
+                      }
+                  ),
+                  TextField(
+                      obscureText: true,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(labelText: 'Password',),
+                      onChanged: (text) {
+                        _password = text;
+                      }
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child:
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                          child:
+                            ElevatedButton (
+                            onPressed: _register,
+                            child: Text('Register'),
+                            )
+                        )
+                  ),
+                  Text(
+                      '$_output'
+                  ),
+              ],
+            ),
+          )
         )
     );
-    return Container();
+    //return Container();
   }
 
   void _register() {
@@ -73,6 +83,50 @@ class _RegisterRouteState extends State<RegisterRoute> {
     setState(() {
       _output = "Registering...";
     });
+
+    int _emailCompare = _email.compareTo(""), _firstNameCompare = _firstName.compareTo(""), _lastNameCompare = _lastName.compareTo(""), _passwordCompare = _password.compareTo(""), multiple = 0;
+
+    if(_emailCompare == 0 || _firstNameCompare == 0 || _lastNameCompare == 0 || _passwordCompare == 0)
+    {
+      setState(() {
+          _output = "";
+        if(_emailCompare == 0)
+        {
+          multiple++;
+          _output += "Email";
+        }
+        if(_firstNameCompare == 0)
+        {
+          multiple++;
+          if(multiple > 1)
+            _output +=", ";
+          _output += "First Name";
+        }
+        if(_lastNameCompare == 0)
+        {
+          multiple++;
+          if(multiple > 1)
+            _output +=", ";
+          _output += "Last Name";
+        }
+        if(_passwordCompare == 0)
+        {
+          multiple++;
+          if(multiple > 1)
+            _output +=", ";
+          _output += "Password";
+        }
+        if(multiple > 1)
+        {
+          _output += " are missing";
+        }
+        else
+        {
+          _output += " is missing";
+        }
+      });
+      return;
+    }
     //converts th email, firstname, etc. into JSON format
     String content = '{"email": "' + _email + '","firstName": "' +
         _firstName + '","lastName": "' + _lastName + '","password": "' +

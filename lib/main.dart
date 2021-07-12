@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/getAPI.dart';
-import 'package:myuseum/register.dart';
+import 'login.dart';
 
 String urlBase = "https://cop-4331-large-project.herokuapp.com";
 
@@ -10,10 +10,26 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  @override
+
+  final ColorScheme colorScheme = ColorScheme(
+    primary: Color(0xFFBDBDBD), // <---- I set white color here
+    primaryVariant: Color(0xFF8d8d8d),
+    secondary: Color(0xFFFF8A65),
+    secondaryVariant: Color(0xFFC75B39),
+    background: Color(0xFF7B2222),
+    surface: Color(0xFFA01010),
+    onBackground: Colors.green,
+    error: Colors.redAccent,
+    onError: Colors.redAccent,
+    onPrimary: Color(0xFF000000),
+    onSecondary: Color(0xFF000000),
+    onSurface: Color(0xFF000000),
+    brightness: Brightness.light,
+  );
+
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Myuseum',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,193 +40,14 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.grey,
+        colorScheme: colorScheme,
+        primaryColor: colorScheme.primary,
+        //buttonColor: colorScheme.secondary,
       ),
       home: LoginRoute(),
     );
   }
 }
-
-class LoginRoute extends StatefulWidget {
-  @override
-  _LoginRouteState createState() => _LoginRouteState();
-}
-
-class _LoginRouteState extends State<LoginRoute> {
-  @override
-  String _email = "";
-  String _password = "";
-  String _loginStatus = "";
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-
-      body: Center(
-          child: Column(
-            children: [
-              TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Email',),
-                  onChanged: (text) {
-                    _email = text;
-                  }
-              ),
-              TextField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Password',),
-                  obscureText: true,
-                  onChanged: (text) {
-                    _password = text;
-                  }
-              ),
-              ElevatedButton(
-                child: Text('Login'),
-                onPressed: () {
-                  _login(context);
-                },
-              ),
-              Text(
-                '$_loginStatus',
-              ),
-              ElevatedButton(
-                child: Text('Register'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RegisterRoute()),
-                  );
-                },
-              ),
-              ElevatedButton(
-                child: Text('Forgot Password'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ForgotPasswordRoute()),
-                  );
-                },
-              ),
-            ],
-          )
-      ),
-    );
-    return Container();
-  }
-
-  void _login(BuildContext context) {
-    setState(() {
-      _loginStatus = 'Logging in';
-    });
-    String output = "";
-    String registerURL = urlBase + "/users/login";
-    String content = '{"email": "' + _email + '","password": "' +
-        _password + '"}';
-    Register.sendRegister(registerURL, content).then((value) {
-      output = value;
-      if(output.compareTo('200') == 0) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyHomePage(title: 'Homepage')),
-        );
-      }
-      else if(output.compareTo('400') == 0)
-      {
-        setState(() {
-          _loginStatus = 'Wrong password or email';
-        });
-      }
-      else
-      {
-        setState(() {
-          _loginStatus = 'error: ' + output;
-        });
-      }
-    });
-  }
-}
-
-
-
-class ForgotPasswordRoute extends StatefulWidget {
-  @override
-  _ForgotPasswordRouteState createState() => _ForgotPasswordRouteState();
-}
-
-class _ForgotPasswordRouteState extends State<ForgotPasswordRoute> {
-  @override
-
-  String _output = "";
-  String _email = "";
-
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Login'),
-        ),
-
-        body: Center(
-          child: Column(
-            children: [
-              TextField(
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(labelText: 'Email'),
-                onChanged: (text) {
-                  _email = text;
-                },
-              ),
-              ElevatedButton(
-                onPressed: _forgotPassword,
-                child:
-                    Text('Submit'),
-              ),
-              Text('$_output'),
-            ]
-          )
-        ),
-    );
-    return Container();
-  }
-
-  void _forgotPassword() {
-    setState(() {
-      _output = "Sending...";
-    });
-    String content = '{"email": "' + _email + '"';
-    String registerURL = urlBase + "/users/forgotPassword";
-    Register.sendRegister(registerURL, content).then((value) {
-      if(value.compareTo("200") == 0) {
-        setState(() {
-          _output = 'Email sent';
-        });
-      }
-      else if(value.compareTo("400") == 0) {
-        setState(() {
-          _output = 'Email required';
-        });
-      }
-      else if(value.compareTo("404") == 0) {
-        setState(() {
-          _output = 'Email does not exist';
-        });
-      }
-      else if(value.compareTo("503") == 0) {
-        setState(() {
-          _output = 'Email failed to send';
-        });
-      }
-      else
-      {
-        setState(() {
-          _output = 'Error ' + value;
-        });
-      }
-    });
-  }
-}
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -239,6 +76,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void handleClick(String value) {
+    switch (value) {
+      case 'Logout':
+        _logout();
+        break;
+    }
+  }
+
+  void _logout()
+  {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginRoute()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -252,6 +105,19 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            onSelected: handleClick,
+            itemBuilder: (BuildContext context) {
+              return {'Logout'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

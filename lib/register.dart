@@ -176,7 +176,7 @@ class RegistrationFormState extends State<RegistrationForm>{
     //Updates the url to direct to the register function
     String registerURL = urlBase + "/users/register";
     //posts the request and updates the outpuut to read whether or not it was successful
-    Register.sendRegister(registerURL, content).then((value) {
+    Register.sendRegisterGetStatusCode(registerURL, content).then((value) {
       setState(() {
         if(value.compareTo("200") == 0)
           _output = "Account Created";

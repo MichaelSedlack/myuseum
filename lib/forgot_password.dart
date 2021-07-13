@@ -59,7 +59,7 @@ class _ForgotPasswordRouteState extends State<ForgotPasswordRoute> {
     });
     String content = '{"email": "' + _email + '"';
     String registerURL = urlBase + "/users/forgotPassword";
-    Register.sendRegister(registerURL, content).then((value) {
+    Register.sendRegisterGetStatusCode(registerURL, content).then((value) {
       if(value.compareTo("200") == 0) {
         setState(() {
           _output = 'Email sent';

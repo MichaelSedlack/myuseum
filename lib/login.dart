@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 import 'package:myuseum/main.dart';
@@ -93,9 +95,12 @@ class _LoginRouteState extends State<LoginRoute> {
     String registerURL = urlBase + "/users/login";
     String content = '{"email": "' + _email + '","password": "' +
         _password + '"}';
-    Register.sendRegister(registerURL, content).then((value) {
+    Register.sendRegisterGetStatusCode(registerURL, content).then((value) {
       output = value;
       if(output.compareTo('200') == 0) {
+        Register.sendRegisterGetBody(registerURL, content).then((value) {
+          parseLogin(value);
+        });
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => MyHomePage(title: 'Homepage')),
@@ -114,5 +119,26 @@ class _LoginRouteState extends State<LoginRoute> {
         });
       }
     });
+  }
+
+  void parseLogin(String responseBody) {
+    Login.fromJson(jsonDecode(responseBody));
+  }
+}
+
+class Login {
+  Login(String newAccessToken, String newId, String newEmail)
+  {
+    accessToken = newAccessToken;
+    id = newId;
+    email = newEmail;
+  }
+
+  Login.fromJson(Map<String, dynamic> json) {
+    Login(
+      json['accessToken'] as String,
+      json['id'] as String,
+      json['email'] as String
+    );
   }
 }

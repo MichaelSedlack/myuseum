@@ -3,6 +3,8 @@ import 'package:myuseum/Utils/getAPI.dart';
 import 'login.dart';
 
 String urlBase = "https://cop-4331-large-project.herokuapp.com";
+String accessToken = "", id = "", email = "";
+
 
 void main() {
   runApp(MyApp());
@@ -110,6 +112,10 @@ class _MyHomePageState extends State<MyHomePage> {
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
               return {'Logout'}.map((String choice) {
+                //resets the login values to ensure you aren't still logged in
+                id = "";
+                email = "";
+                accessToken = "";
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -146,7 +152,6 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-
           ],
         ),
       ),

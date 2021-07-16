@@ -5,6 +5,7 @@ import 'package:myuseum/Utils/getAPI.dart';
 import 'package:myuseum/main.dart';
 import 'package:myuseum/register.dart';
 import 'package:myuseum/forgot_password.dart';
+import 'package:myuseum/rooms.dart';
 
 class LoginRoute extends StatefulWidget {
   @override
@@ -21,36 +22,34 @@ class _LoginRouteState extends State<LoginRoute> {
       appBar: AppBar(
         title: Text('Login'),
       ),
-
       body: Center(
-        child:
-        Padding (
+        child: Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child:
-          Column(
+          child: Column(
             children: [
               TextField(
                   textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Email',),
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                  ),
                   onChanged: (text) {
                     _email = text;
-                  }
-              ),
+                  }),
               TextField(
                   textAlign: TextAlign.center,
-                  decoration: InputDecoration(labelText: 'Password',),
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                  ),
                   obscureText: true,
                   onChanged: (text) {
                     _password = text;
-                  }
-              ),
+                  }),
               Text(
                 '$_loginStatus',
               ),
               SizedBox(
                 width: double.infinity,
-                child:
-                ElevatedButton(
+                child: ElevatedButton(
                   child: Text('Login'),
                   onPressed: () {
                     _login(context);
@@ -59,8 +58,7 @@ class _LoginRouteState extends State<LoginRoute> {
               ),
               SizedBox(
                 width: double.infinity,
-                child:
-                ElevatedButton(
+                child: ElevatedButton(
                   child: Text('Register'),
                   onPressed: () {
                     Navigator.push(
@@ -75,7 +73,18 @@ class _LoginRouteState extends State<LoginRoute> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ForgotPasswordRoute()),
+                    MaterialPageRoute(
+                        builder: (context) => ForgotPasswordRoute()),
+                  );
+                },
+              ),
+              //Testing purposes to skip log in
+              TextButton(
+                child: Text('rooms page'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RoomsRoute()),
                   );
                 },
               ),
@@ -93,27 +102,24 @@ class _LoginRouteState extends State<LoginRoute> {
     });
     String output = "";
     String registerURL = urlBase + "/users/login";
-    String content = '{"email": "' + _email + '","password": "' +
-        _password + '"}';
+    String content =
+        '{"email": "' + _email + '","password": "' + _password + '"}';
     Register.sendRegisterGetStatusCode(registerURL, content).then((value) {
       output = value;
-      if(output.compareTo('200') == 0) {
+      if (output.compareTo('200') == 0) {
         Register.sendRegisterGetBody(registerURL, content).then((value) {
           parseLogin(value);
         });
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MyHomePage(title: 'Homepage')),
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(title: 'Homepage')),
         );
-      }
-      else if(output.compareTo('400') == 0)
-      {
+      } else if (output.compareTo('400') == 0) {
         setState(() {
           _loginStatus = 'Wrong password or email';
         });
-      }
-      else
-      {
+      } else {
         setState(() {
           _loginStatus = 'error: ' + output;
         });
@@ -127,18 +133,14 @@ class _LoginRouteState extends State<LoginRoute> {
 }
 
 class Login {
-  Login(String newAccessToken, String newId, String newEmail)
-  {
+  Login(String newAccessToken, String newId, String newEmail) {
     accessToken = newAccessToken;
     id = newId;
     email = newEmail;
   }
 
   Login.fromJson(Map<String, dynamic> json) {
-    Login(
-      json['accessToken'] as String,
-      json['id'] as String,
-      json['email'] as String
-    );
+    Login(json['accessToken'] as String, json['id'] as String,
+        json['email'] as String);
   }
 }

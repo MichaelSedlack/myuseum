@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 import 'package:myuseum/main.dart';
+import 'package:myuseum/Utils/userInfo.dart';
 import 'package:myuseum/register.dart';
 import 'package:myuseum/forgot_password.dart';
-import 'package:myuseum/rooms.dart';
 
 class LoginRoute extends StatefulWidget {
   @override
@@ -78,16 +78,6 @@ class _LoginRouteState extends State<LoginRoute> {
                   );
                 },
               ),
-              //Testing purposes to skip log in
-              TextButton(
-                child: Text('rooms page'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => RoomsRoute()),
-                  );
-                },
-              ),
             ],
           ),
         ),
@@ -104,10 +94,10 @@ class _LoginRouteState extends State<LoginRoute> {
     String registerURL = urlBase + "/users/login";
     String content =
         '{"email": "' + _email + '","password": "' + _password + '"}';
-    Register.sendRegisterGetStatusCode(registerURL, content).then((value) {
+    Register.postRegisterGetStatusCode(registerURL, content).then((value) {
       output = value;
       if (output.compareTo('200') == 0) {
-        Register.sendRegisterGetBody(registerURL, content).then((value) {
+        Register.postRegisterGetBody(registerURL, content).then((value) {
           parseLogin(value);
         });
         Navigator.pushReplacement(
@@ -134,9 +124,9 @@ class _LoginRouteState extends State<LoginRoute> {
 
 class Login {
   Login(String newAccessToken, String newId, String newEmail) {
-    accessToken = newAccessToken;
-    id = newId;
-    email = newEmail;
+    setAccessToken(newAccessToken);
+    setId(newId);
+    setEmail(newEmail);
   }
 
   Login.fromJson(Map<String, dynamic> json) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/getAPI.dart';
-import 'package:myuseum/main.dart';
+import 'package:myuseum/Utils/userInfo.dart';
 
 class ForgotPasswordRoute extends StatefulWidget {
   @override
@@ -59,7 +59,7 @@ class _ForgotPasswordRouteState extends State<ForgotPasswordRoute> {
     });
     String content = '{"email": "' + _email + '"';
     String registerURL = urlBase + "/users/forgotPassword";
-    Register.sendRegisterGetStatusCode(registerURL, content).then((value) {
+    Register.postRegisterGetStatusCode(registerURL, content).then((value) {
       if(value.compareTo("200") == 0) {
         setState(() {
           _output = 'Email sent';

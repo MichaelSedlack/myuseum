@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 import 'login.dart';
-
-String urlBase = "https://cop-4331-large-project.herokuapp.com";
-String accessToken = "", id = "", email = "";
-
+import 'package:myuseum/rooms.dart';
+import 'package:myuseum/Utils/userInfo.dart';
 
 void main() {
   runApp(MyApp());
@@ -150,6 +148,15 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
+            ),
+            TextButton(
+              child: Text('rooms page'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RoomsRoute()),
+                );
+              },
             ),
           ],
         ),

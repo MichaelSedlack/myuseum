@@ -1,8 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:myuseum/Utils/userInfo.dart';
 
 class Register {
-  static Future<String> sendRegisterGetStatusCode(String url,
+  static Future<String> postRegisterGetStatusCode(String url,
       String content) async
   {
     String ret = "";
@@ -13,6 +14,7 @@ class Register {
           headers:
           {
             "Accept": "Application/json",
+            "Authorization": "bearer ${getAccessToken()}",
             "Content-Type": "application/json",
           },
           encoding: Encoding.getByName("utf-8")
@@ -27,7 +29,7 @@ class Register {
     return ret;
   }
 
-  static Future<String> sendRegisterGetBody(String url, String content) async
+  static Future<String> postRegisterGetBody(String url, String content) async
   {
     String ret = "";
 
@@ -37,6 +39,7 @@ class Register {
           headers:
           {
             "Accept": "Application/json",
+            "Authorization": "bearer ${getAccessToken()}",
             "Content-Type": "application/json",
           },
           encoding: Encoding.getByName("utf-8")
@@ -50,4 +53,50 @@ class Register {
 
     return ret;
   }
+  static Future<String> getRegisterGetStatusCode(String url, String content) async
+  {
+    String ret = "";
+    try {
+      http.Response response = await http.get(
+        Uri.parse(url),
+        headers:
+        {
+          "Accept": "Application/json",
+          "Authorization": "bearer ${getAccessToken()}",
+          "Content-Type": "application/json",
+        },
+      );
+      ret = response.statusCode.toString();
+    }
+
+    catch (e) {
+      print(e.toString());
+    }
+
+    return ret;
+  }
+
+  static Future<String> getRegisterGetBody(String url, String content) async
+  {
+    String ret = "";
+    try {
+      http.Response response = await http.get(
+          Uri.parse(url),
+          headers:
+          {
+            "Accept": "Application/json",
+            "Authorization": "bearer ${getAccessToken()}",
+            "Content-Type": "application/json",
+          },
+      );
+      ret = response.body;
+    }
+
+    catch (e) {
+      print(e.toString());
+    }
+
+    return ret;
+  }
+
 }

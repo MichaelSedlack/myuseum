@@ -21,6 +21,8 @@ class _RoomsRouteState extends State<RoomsRoute> {
   //Need to get the list of available rooms from the backend
   final List<Room> _rooms = [];
   var index = 0;
+  String roomName = "", isPrivate = "false";
+
 
   void getRooms() {
     String content = '{"id": "' + id + '"}';
@@ -47,8 +49,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
         itemBuilder: (context, item) {
           if (item.isOdd) return Divider();
           index++; //increases the index so that all rooms are gone through
-          return _buildRow(_rooms[index -
-              1]); //-1 since you can't add the index after building the row
+          return _buildRow(_rooms[index - 1]); //-1 since you can't add the index after building the row
         });
   }
 
@@ -62,34 +63,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
   }
 
   _showDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaY: 10.0, sigmaX: 10.0),
-            child: AlertDialog(
-              title: Text('Add Room'),
-              actions: [
-                TextFormField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty)
-                      return 'Please enter room name';
-                    else
-                      return null;
-                  },
-                  onChanged: (value) {},
-                  decoration: InputDecoration(labelText: 'Room name'),
-                ),
-                ElevatedButton(
-                  child: Text('Ok'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            ),
-          );
-        });
+
   }
 
   Widget build(BuildContext context) {
@@ -119,7 +93,12 @@ class _RoomsRouteState extends State<RoomsRoute> {
       body: _buildList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          getRooms();
+          showDialog(
+            context: context,
+            builder: (_) {
+              return NewRoomDialog();
+            }
+          );
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
@@ -143,5 +122,74 @@ class _RoomsRouteState extends State<RoomsRoute> {
       context,
       MaterialPageRoute(builder: (context) => LoginRoute()),
     );
+  }
+
+  void toggleIsPrivate() {
+    if(isPrivate.compareTo("true") == 0) {
+      isPrivate = "false";
+      return;
+    }
+    if(isPrivate.compareTo("false") == 0) {
+      isPrivate = "true";
+      return;
+    }
+  }
+
+
+}
+
+class NewRoomDialog extends StatefulWidget {
+  _NewRoomDialogState createState() => new _NewRoomDialogState();
+}
+
+class _NewRoomDialogState extends State<NewRoomDialog> {
+  bool isSwitched = false;
+  String isPrivate = "", roomName = "";
+
+  Widget build(BuildContext context) {
+    return BackdropFilter(
+        filter: ImageFilter.blur(sigmaY: 10.0, sigmaX: 10.0),
+        child: AlertDialog(
+          title: Text('Add Room'),
+          actions: <Widget>[
+            TextFormField(
+              validator: (value) {
+                if (value == null || value.isEmpty)
+                  return 'Please enter room name';
+                else
+                  return null;
+              },
+              onChanged: (value) {
+                roomName = value;
+              },
+              decoration: InputDecoration(labelText: 'Room name'),
+            ),
+            Switch(
+              value: isSwitched,
+              onChanged: (bool value) {
+                setState(() {
+                  isSwitched = value;
+                  value = !value;
+                  print(isSwitched);
+                  print(isPrivate);
+                });
+              },
+            ),
+            ElevatedButton(
+              child: Text('Ok'),
+              onPressed: () {
+                _addRoom();
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+    );
+  }
+
+  void _addRoom() {
+    String url = urlBase + "/rooms/create";
+    String content = '{"name": ' + roomName + ', "private": ' + isPrivate + '}';
+    Register.postRegisterGetStatusCode(url, content);
   }
 }

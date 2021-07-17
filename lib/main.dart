@@ -10,25 +10,24 @@ void main() {
   runApp(MyApp());
 }
 
+final ColorScheme colorScheme = ColorScheme(
+  primary: Color(0xFFBDBDBD), // <---- I set white color here
+  primaryVariant: Color(0xFF8d8d8d),
+  secondary: Color(0xFFFF8A65),
+  secondaryVariant: Color(0xFFC75B39),
+  background: Color(0xFF7B2222),
+  surface: Color(0xFFA01010),
+  onBackground: Colors.green,
+  error: Colors.redAccent,
+  onError: Colors.redAccent,
+  onPrimary: Color(0xFF000000),
+  onSecondary: Color(0xFF000000),
+  onSurface: Color(0xFF000000),
+  brightness: Brightness.light,
+);
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-
-  final ColorScheme colorScheme = ColorScheme(
-    primary: Color(0xFFBDBDBD), // <---- I set white color here
-    primaryVariant: Color(0xFF8d8d8d),
-    secondary: Color(0xFFFF8A65),
-    secondaryVariant: Color(0xFFC75B39),
-    background: Color(0xFF7B2222),
-    surface: Color(0xFFA01010),
-    onBackground: Colors.green,
-    error: Colors.redAccent,
-    onError: Colors.redAccent,
-    onPrimary: Color(0xFF000000),
-    onSecondary: Color(0xFF000000),
-    onSurface: Color(0xFF000000),
-    brightness: Brightness.light,
-  );
-
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Myuseum',

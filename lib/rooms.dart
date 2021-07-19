@@ -25,15 +25,16 @@ class _RoomsRouteState extends State<RoomsRoute> {
 
 
   void getRooms() {
-    String content = '{"id": "' + id + '"}';
-    String registerURL = urlBase + "/users/collections";
+    String content = '{"id": "' + getId() + '"}';
+    String registerURL = urlBase + "/users/rooms";
     print(registerURL);
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
       print('Status Code: ' + value);
+      print(getId());
       if (value.compareTo("200") == 0) {
         Register.getRegisterGetBody(registerURL, content).then((value) {
+          print('Value ' + value);
           for (int i = 0; i < value.length; i++) {
-            print(value);
           }
         });
       }
@@ -190,6 +191,9 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
   void _addRoom() {
     String url = urlBase + "/rooms/create";
     String content = '{"name": ' + roomName + ', "private": ' + isPrivate + '}';
-    Register.postRegisterGetStatusCode(url, content);
+    Register.postRegisterGetStatusCode(url, content).then((value) {
+      print(value);
+      _RoomsRouteState().getRooms();
+    });
   }
 }

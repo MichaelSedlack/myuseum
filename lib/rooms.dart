@@ -193,5 +193,4 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
       return;
     }
   }
-
 }

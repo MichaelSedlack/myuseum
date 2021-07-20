@@ -8,14 +8,6 @@ class RegisterRoute extends StatefulWidget {
 }
 
 class _RegisterRouteState extends State<RegisterRoute> {
-  //Values used throughout the state
-  String _email = "";
-  String _firstName = "";
-  String _lastName = "";
-  String _password = "";
-  String _output = "";
-
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

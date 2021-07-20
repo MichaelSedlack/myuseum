@@ -76,8 +76,9 @@ class _LoginRouteState extends State<LoginRoute> {
                   },
                 ),
               ),
+              Spacer(),
               TextButton(
-                child: Text('Forgot Password'),
+                child: Text('Forgot Password', style: TextStyle(color: colorScheme.primaryVariant)),
                 onPressed: () {
                   Navigator.push(
                     context,

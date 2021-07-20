@@ -6,6 +6,7 @@ import 'package:myuseum/main.dart';
 import 'package:myuseum/Utils/userInfo.dart';
 import 'package:myuseum/register.dart';
 import 'package:myuseum/forgot_password.dart';
+import 'package:flutter/services.dart'; //for removing the toolbar
 
 class LoginRoute extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class _LoginRouteState extends State<LoginRoute> {
   String _loginStatus = "";
 
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       // appBar: AppBar(
       //   title: Text('Login'),
@@ -28,7 +30,7 @@ class _LoginRouteState extends State<LoginRoute> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                padding: EdgeInsets.fromLTRB(0, 40, 0, 20),
                 child: Image.asset("assets/images/logo.png",
                   scale: 2,
                 ),

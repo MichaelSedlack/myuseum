@@ -53,12 +53,15 @@ class Register {
 
     return ret;
   }
-  static Future<String> getRegisterGetStatusCode(String url, String content) async
+  static Future<String> getRegisterGetStatusCode(String url, Map<String, String> content) async
   {
     String ret = "";
+    Uri uri = Uri.parse(url);
+    uri = uri.replace(queryParameters: content);
+    print(uri);
     try {
       http.Response response = await http.get(
-        Uri.parse(url),
+        uri,
         headers:
         {
           "Accept": "Application/json",
@@ -76,12 +79,14 @@ class Register {
     return ret;
   }
 
-  static Future<String> getRegisterGetBody(String url, String content) async
+  static Future<String> getRegisterGetBody(String url, Map<String, String> content) async
   {
     String ret = "";
+    Uri uri = Uri.parse(url);
+    uri = uri.replace(queryParameters: content);
     try {
       http.Response response = await http.get(
-          Uri.parse(url),
+          uri,
           headers:
           {
             "Accept": "Application/json",

@@ -32,7 +32,9 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
   var index = 0;
 
   void getCollections() {
-    String content = '{"id": "' + getId() + '"}';
+    Map<String, String> content = {
+      'id': getId(),
+    };
     String registerURL = urlBase + "/users/collections";
     print(registerURL);
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {

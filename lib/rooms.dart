@@ -24,15 +24,17 @@ class _RoomsRouteState extends State<RoomsRoute> {
   String roomName = "", isPrivate = "false";
 
   void getRooms() {
-    String content = '{"id": "' + getId() + '"}';
+    Map<String, String> content = {
+      'id': getId(),
+    };
     String registerURL = urlBase + "/users/rooms";
     print(registerURL);
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
       print('Status Code: ' + value);
       print(getId());
       if (value.compareTo("200") == 0) {
-        Register.getRegisterGetBody(registerURL, content).then((value) {
-          print('Value ' + value);
+        Register.getRegisterGetBody(registerURL, content).then((newValue) {
+          print('Value ' + newValue);
           for (int i = 0; i < value.length; i++) {}
         });
       }

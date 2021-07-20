@@ -23,7 +23,6 @@ class _RoomsRouteState extends State<RoomsRoute> {
   var index = 0;
   String roomName = "", isPrivate = "false";
 
-
   void getRooms() {
     String content = '{"id": "' + getId() + '"}';
     String registerURL = urlBase + "/users/rooms";
@@ -34,8 +33,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
       if (value.compareTo("200") == 0) {
         Register.getRegisterGetBody(registerURL, content).then((value) {
           print('Value ' + value);
-          for (int i = 0; i < value.length; i++) {
-          }
+          for (int i = 0; i < value.length; i++) {}
         });
       }
     });
@@ -50,7 +48,8 @@ class _RoomsRouteState extends State<RoomsRoute> {
         itemBuilder: (context, item) {
           if (item.isOdd) return Divider();
           index++; //increases the index so that all rooms are gone through
-          return _buildRow(_rooms[index - 1]); //-1 since you can't add the index after building the row
+          return _buildRow(_rooms[index -
+              1]); //-1 since you can't add the index after building the row
         });
   }
 
@@ -63,9 +62,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
         });
   }
 
-  _showDialog() {
-
-  }
+  _showDialog() {}
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,11 +92,10 @@ class _RoomsRouteState extends State<RoomsRoute> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
-            context: context,
-            builder: (_) {
-              return NewRoomDialog();
-            }
-          );
+              context: context,
+              builder: (_) {
+                return NewRoomDialog();
+              });
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
@@ -126,17 +122,16 @@ class _RoomsRouteState extends State<RoomsRoute> {
   }
 
   void toggleIsPrivate() {
-    if(isPrivate.compareTo("true") == 0) {
+    print("toggleIsPrivate was called");
+    if (isPrivate.compareTo("true") == 0) {
       isPrivate = "false";
       return;
     }
-    if(isPrivate.compareTo("false") == 0) {
+    if (isPrivate.compareTo("false") == 0) {
       isPrivate = "true";
       return;
     }
   }
-
-
 }
 
 class NewRoomDialog extends StatefulWidget {
@@ -149,42 +144,44 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
 
   Widget build(BuildContext context) {
     return BackdropFilter(
-        filter: ImageFilter.blur(sigmaY: 10.0, sigmaX: 10.0),
-        child: AlertDialog(
-          title: Text('Add Room'),
-          actions: <Widget>[
-            TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty)
-                  return 'Please enter room name';
-                else
-                  return null;
-              },
-              onChanged: (value) {
-                roomName = value;
-              },
-              decoration: InputDecoration(labelText: 'Room name'),
-            ),
-            Switch(
-              value: isSwitched,
-              onChanged: (bool value) {
-                setState(() {
-                  isSwitched = value;
-                  value = !value;
-                  print(isSwitched);
-                  print(isPrivate);
-                });
-              },
-            ),
-            ElevatedButton(
-              child: Text('Ok'),
-              onPressed: () {
-                _addRoom();
-                Navigator.pop(context);
-              },
-            )
-          ],
-        ),
+      filter: ImageFilter.blur(sigmaY: 10.0, sigmaX: 10.0),
+      child: AlertDialog(
+        title: Text('Add Room'),
+        actions: <Widget>[
+          TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty)
+                return 'Please enter room name';
+              else
+                return null;
+            },
+            onChanged: (value) {
+              roomName = value;
+            },
+            decoration: InputDecoration(labelText: 'Room name'),
+          ),
+          Switch(
+            value: isSwitched,
+            onChanged: (bool value) {
+              setState(() {
+                isSwitched = value;
+                value = !value;
+                print("is Switched is $isSwitched");
+                print("private is $isPrivate");
+              });
+            },
+          ),
+          if (!isSwitched) Text("public"),
+          if (isSwitched) Text("private"),
+          ElevatedButton(
+            child: Text('Ok'),
+            onPressed: () {
+              _addRoom();
+              Navigator.pop(context);
+            },
+          )
+        ],
+      ),
     );
   }
 

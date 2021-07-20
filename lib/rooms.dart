@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:convert';
 import 'package:myuseum/login.dart';
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/userInfo.dart';
@@ -23,26 +24,36 @@ class _RoomsRouteState extends State<RoomsRoute> {
   var index = 0;
   String roomName = "", isPrivate = "false";
 
-  void getRooms() {
+  @override
+  void initState() {
+    super.initState();
+    getRooms();
+  }
+
+  Future getRooms() async{
     Map<String, String> content = {
       'id': getId(),
     };
     String registerURL = urlBase + "/users/rooms";
-    print(registerURL);
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
       print('Status Code: ' + value);
-      print(getId());
       if (value.compareTo("200") == 0) {
         Register.getRegisterGetBody(registerURL, content).then((newValue) {
-          print('Value ' + newValue);
-          for (int i = 0; i < value.length; i++) {}
+        List rooms = json.decode(newValue);
+        _rooms.clear();
+        print(rooms.length);
+         for (int i = 0; i < rooms.length; i++) {
+           setState(() {
+            _rooms.add(Room(rooms[i]['name']));
+           });
+         }
         });
       }
     });
   }
 
   Widget _buildList() {
-    getRooms();
+    index = 0;
     return ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: _rooms.length *
@@ -50,8 +61,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
         itemBuilder: (context, item) {
           if (item.isOdd) return Divider();
           index++; //increases the index so that all rooms are gone through
-          return _buildRow(_rooms[index -
-              1]); //-1 since you can't add the index after building the row
+          return _buildRow(_rooms[index - 1]); //-1 since you can't add the index after building the row
         });
   }
 

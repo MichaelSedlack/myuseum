@@ -19,14 +19,20 @@ class _LoginRouteState extends State<LoginRoute> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('Login'),
+      // ),
       body: Center(
         child: Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: Column(
             children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                child: Image.asset("Assets/Images/logo.png",
+                  scale: 2,
+                ),
+              ),
               TextField(
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(

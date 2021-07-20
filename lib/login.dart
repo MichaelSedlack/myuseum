@@ -29,7 +29,7 @@ class _LoginRouteState extends State<LoginRoute> {
             children: [
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                child: Image.asset("Assets/Images/logo.png",
+                child: Image.asset("assets/images/logo.png",
                   scale: 2,
                 ),
               ),

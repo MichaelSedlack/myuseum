@@ -56,8 +56,7 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
         itemBuilder: (context, item) {
           if (item.isOdd) return Divider();
           index++; //increases the index so that all rooms are gone through
-          return _buildRow(_collections[index -
-              1]); //-1 since you can't add the index after building the row
+          return _buildRow(_collections[index - 1]); //-1 since you can't add the index after building the row
         });
   }
 

@@ -62,8 +62,6 @@ class _RoomsRouteState extends State<RoomsRoute> {
         });
   }
 
-  _showDialog() {}
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -120,18 +118,6 @@ class _RoomsRouteState extends State<RoomsRoute> {
       MaterialPageRoute(builder: (context) => LoginRoute()),
     );
   }
-
-  void toggleIsPrivate() {
-    print("toggleIsPrivate was called");
-    if (isPrivate.compareTo("true") == 0) {
-      isPrivate = "false";
-      return;
-    }
-    if (isPrivate.compareTo("false") == 0) {
-      isPrivate = "true";
-      return;
-    }
-  }
 }
 
 class NewRoomDialog extends StatefulWidget {
@@ -140,7 +126,7 @@ class NewRoomDialog extends StatefulWidget {
 
 class _NewRoomDialogState extends State<NewRoomDialog> {
   bool isSwitched = false;
-  String isPrivate = "", roomName = "";
+  String isPrivate = "false", roomName = "";
 
   Widget build(BuildContext context) {
     return BackdropFilter(
@@ -165,6 +151,7 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
             onChanged: (bool value) {
               setState(() {
                 isSwitched = value;
+                toggleIsPrivate();
                 value = !value;
                 print("is Switched is $isSwitched");
                 print("private is $isPrivate");
@@ -187,10 +174,24 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
 
   void _addRoom() {
     String url = urlBase + "/rooms/create";
-    String content = '{"name": ' + roomName + ', "private": ' + isPrivate + '}';
+    String content = '{"name": "' + roomName + '", "private": ' + isPrivate + '}';
+    print(content);
     Register.postRegisterGetStatusCode(url, content).then((value) {
       print(value);
       _RoomsRouteState().getRooms();
     });
   }
+
+  void toggleIsPrivate() {
+    print("toggleIsPrivate was called");
+    if (isPrivate.compareTo("true") == 0) {
+      isPrivate = "false";
+      return;
+    }
+    if (isPrivate.compareTo("false") == 0) {
+      isPrivate = "true";
+      return;
+    }
+  }
+
 }

@@ -53,15 +53,13 @@ class _RoomsRouteState extends State<RoomsRoute> {
   }
 
   Widget _buildList() {
-    index = 0;
     return ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: _rooms.length *
             2, //ensures the length includes all rooms with dividers
         itemBuilder: (context, item) {
           if (item.isOdd) return Divider();
-          index++; //increases the index so that all rooms are gone through
-          return _buildRow(_rooms[index - 1]); //-1 since you can't add the index after building the row
+          return _buildRow(_rooms[(item/2).round()]); //-1 since you can't add the index after building the row
         });
   }
 

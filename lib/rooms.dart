@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:convert';
+import 'package:myuseum/main.dart';
 import 'package:myuseum/login.dart';
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/userInfo.dart';
@@ -7,9 +8,10 @@ import 'package:myuseum/Utils/getAPI.dart';
 
 class Room {
   String name = "";
-
-  Room(String newName) {
+  String id = "";
+  Room(String newName, String newId) {
     name = newName;
+    id = newId;
   }
 }
 
@@ -44,7 +46,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
         print(rooms.length);
          for (int i = 0; i < rooms.length; i++) {
            setState(() {
-            _rooms.add(Room(rooms[i]['name']));
+            _rooms.add(Room(rooms[i]['name'], rooms[i]['id']));
            });
          }
         });
@@ -66,7 +68,16 @@ class _RoomsRouteState extends State<RoomsRoute> {
   Widget _buildRow(room) {
     return ListTile(
         title: Text(room.name),
-        trailing: Icon(Icons.edit),
+        trailing:
+          IconButton(
+            icon: new Icon(Icons.delete),
+            onPressed: (){
+              showDialog(
+                context: context,
+                builder: (_) => DeleteRoomDialog(roomName: room.name, roomId: room.id),
+              );
+            },
+          ),
         onTap: () {
           //Edit the room name
         });
@@ -130,6 +141,40 @@ class _RoomsRouteState extends State<RoomsRoute> {
   }
 }
 
+class DeleteRoomDialog extends StatefulWidget {
+  final String roomId, roomName;
+  const DeleteRoomDialog({Key? key, required this.roomId, required this.roomName}) : super(key: key);
+  // const DeleteRoomDialog({Key key, this.room}) : super(key: key);
+
+  @override
+  _DeleteRoomDialogState createState() => new _DeleteRoomDialogState();
+}
+
+class _DeleteRoomDialogState extends State<DeleteRoomDialog> {
+
+  Widget build(BuildContext context) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaY: 10.0, sigmaX: 10.0),
+      child: AlertDialog(
+        title: Text('Delete Room'),
+        actions: <Widget>[
+          Text('Are you sure you want to delete ${widget.roomName}?'),
+          ElevatedButton(
+            onPressed: (){},
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(colorScheme.primary)),
+            child: Text('Yes'),
+          ),
+          ElevatedButton(
+            onPressed: (){Navigator.pop(context);},
+            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(colorScheme.error)),
+            child: Text('No'),
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class NewRoomDialog extends StatefulWidget {
   _NewRoomDialogState createState() => new _NewRoomDialogState();
 }
@@ -174,6 +219,7 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
             child: Text('Ok'),
             onPressed: () {
               _addRoom();
+              _RoomsRouteState()._buildList();
               Navigator.pop(context);
             },
           )

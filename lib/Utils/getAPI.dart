@@ -104,4 +104,31 @@ class Register {
     return ret;
   }
 
+  static Future<String> deleteRegisterGetStatusCode(String url, Map<String, String> content) async
+  {
+    String ret = "";
+    Uri uri = Uri.parse(url);
+    uri = uri.replace(queryParameters: content);
+    print(uri);
+    try {
+      http.Response response = await http.delete(
+          uri,
+          headers:
+          {
+            "Accept": "Application/json",
+            "Authorization": "bearer ${getAccessToken()}",
+            "Content-Type": "application/json",
+          },
+          encoding: Encoding.getByName("utf-8")
+      );
+      ret = response.statusCode.toString();
+    }
+
+    catch (e) {
+      print(e.toString());
+    }
+
+    return ret;
+  }
+
 }

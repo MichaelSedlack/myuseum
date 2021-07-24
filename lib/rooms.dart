@@ -45,10 +45,9 @@ class _RoomsRouteState extends State<RoomsRoute> {
         _rooms.clear();
         print(rooms.length);
          for (int i = 0; i < rooms.length; i++) {
-           setState(() {
             _rooms.add(Room(rooms[i]['name'], rooms[i]['id']));
-           });
          }
+         setState(() {});
         });
       }
     });
@@ -75,7 +74,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
               showDialog(
                 context: context,
                 builder: (_) => DeleteRoomDialog(roomName: room.name, roomId: room.id),
-              );
+              ).whenComplete(() {getRooms(); setState(() {});}); //refreshes the list
             },
           ),
         onTap: () {
@@ -107,16 +106,23 @@ class _RoomsRouteState extends State<RoomsRoute> {
           ),
         ],
       ),
-      body: _buildList(),
+      body: //_buildList(),
+      ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: _rooms.length * 2, //ensures the length includes all rooms with dividers
+          itemBuilder: (context, item) {
+            if (item.isOdd) return Divider();
+            return _buildRow(_rooms[(item/2).round()]); //-1 since you can't add the index after building the row
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showDialog(
               context: context,
               builder: (_) {
                 return NewRoomDialog();
-              });
+              }).whenComplete(() {getRooms(); setState(() {});}); //refreshes the list
         },
-        tooltip: 'Increment',
+        tooltip: 'Add Room',
         child: Icon(Icons.add),
       ),
     );
@@ -144,13 +150,21 @@ class _RoomsRouteState extends State<RoomsRoute> {
 class DeleteRoomDialog extends StatefulWidget {
   final String roomId, roomName;
   const DeleteRoomDialog({Key? key, required this.roomId, required this.roomName}) : super(key: key);
-  // const DeleteRoomDialog({Key key, this.room}) : super(key: key);
 
   @override
   _DeleteRoomDialogState createState() => new _DeleteRoomDialogState();
 }
 
 class _DeleteRoomDialogState extends State<DeleteRoomDialog> {
+
+  void deleteRoom(String roomId) {
+    String url = urlBase + "/rooms/single";
+    Map<String, String> content = {
+      'id': roomId,
+    };
+    print(content);
+    Register.deleteRegisterGetStatusCode(url, content);
+  }
 
   Widget build(BuildContext context) {
     return BackdropFilter(
@@ -160,7 +174,10 @@ class _DeleteRoomDialogState extends State<DeleteRoomDialog> {
         actions: <Widget>[
           Text('Are you sure you want to delete ${widget.roomName}?'),
           ElevatedButton(
-            onPressed: (){},
+            onPressed: (){
+              deleteRoom(widget.roomId);
+              Navigator.pop(context);
+            },
             style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(colorScheme.primary)),
             child: Text('Yes'),
           ),
@@ -219,6 +236,7 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
             child: Text('Ok'),
             onPressed: () {
               _addRoom();
+              _RoomsRouteState().getRooms();
               _RoomsRouteState()._buildList();
               Navigator.pop(context);
             },
@@ -232,10 +250,7 @@ class _NewRoomDialogState extends State<NewRoomDialog> {
     String url = urlBase + "/rooms/create";
     String content = '{"name": "' + roomName + '", "private": ' + isPrivate + '}';
     print(content);
-    Register.postRegisterGetStatusCode(url, content).then((value) {
-      print(value);
-      _RoomsRouteState().getRooms();
-    });
+    Register.postRegisterGetStatusCode(url, content).whenComplete(() {_RoomsRouteState().getRooms().whenComplete(() {_RoomsRouteState().setState(() {});});});
   }
 
   void toggleIsPrivate() {

@@ -131,4 +131,27 @@ class Register {
     return ret;
   }
 
+  static Future<String> putRegisterGetStatus(String url, String content) async{
+    String ret = "";
+    try {
+      http.Response response = await http.put(
+          Uri.parse(url), body: utf8.encode(content),
+          headers:
+          {
+            "Accept": "Application/json",
+            "Authorization": "bearer ${getAccessToken()}",
+            "Content-Type": "application/json",
+          },
+          encoding: Encoding.getByName("utf-8")
+      );
+      ret = response.statusCode.toString();
+    }
+
+    catch (e) {
+      print(e.toString());
+    }
+
+    return ret;
+  }
+
 }

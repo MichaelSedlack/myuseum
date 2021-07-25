@@ -9,9 +9,11 @@ import 'package:myuseum/Utils/getAPI.dart';
 class Room {
   String name = "";
   String id = "";
-  Room(String newName, String newId) {
+  String private = "";
+  Room(String newName, String newId, String newPrivate) {
     name = newName;
     id = newId;
+    private = newPrivate;
   }
 }
 
@@ -45,7 +47,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
           _rooms.clear();
           print(rooms.length);
           for (int i = 0; i < rooms.length; i++) {
-            _rooms.add(Room(rooms[i]['name'], rooms[i]['id']));
+            _rooms.add(Room(rooms[i]['name'], rooms[i]['id'], rooms[i]['private'].toString()));
           }
           setState(() {});
         });
@@ -71,7 +73,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
         trailing: IconButton(
           icon: new Icon(Icons.border_color_rounded),
           tooltip: 'Edit Room',
-          color: Colors.green,
+          color: colorScheme.primary,
           onPressed:
               () /*{
             showDialog(
@@ -91,13 +93,20 @@ class _RoomsRouteState extends State<RoomsRoute> {
                 title: const Text('Edit Room'),
                 //content: !EDIT ROOM NAME HERE,
                 actions: <Widget>[
+                  TextFormField(
+                    initialValue: room.name,
+                    onChanged: (value) {
+                      room.name = value;
+                    },
+                  ),
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Close'),
                     child: const Text('Close'),
                   ),
                   IconButton(
+                    tooltip: 'Delete Room',
                     icon: new Icon(Icons.delete),
-                    color: Colors.red,
+                    color: colorScheme.error,
                     onPressed: () => showDialog(
                       context: context,
                       builder: (_) => DeleteRoomDialog(
@@ -107,6 +116,15 @@ class _RoomsRouteState extends State<RoomsRoute> {
                       setState(() {});
                     }),
                   ),
+                  IconButton(
+                    tooltip: 'Save Room Edit',
+                    icon: new Icon(Icons.save),
+                    color: colorScheme.primary,
+                    onPressed: () {
+                      _editRoom(room.name, room.private);
+                      Navigator.pop(context);
+                    }
+                  )
                 ],
               ),
             );
@@ -127,11 +145,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
           PopupMenuButton<String>(
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'Logout'}.map((String choice) {
-                //resets the login values to ensure you aren't still logged in
-                id = "";
-                email = "";
-                accessToken = "";
+              return {'Logout', 'Refresh'}.map((String choice) {
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -180,10 +194,40 @@ class _RoomsRouteState extends State<RoomsRoute> {
   }
 
   void _logout() {
+    //resets the login values to ensure you aren't still logged in
+    setId("");
+    setEmail("");
+    setAccessToken("");
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => LoginRoute()),
     );
+  }
+
+  void _editRoom(String roomName, String isPrivate) {
+     String url = urlBase + "/rooms/single";
+     String content =
+         '{"name": "' + roomName + '", "private": ' + isPrivate + '}';
+     Register.putRegisterGetStatus(url, content).then((value) {
+       if(value.compareTo("200") == 0) {
+         _RoomsRouteState().getRooms().whenComplete(() {
+           _RoomsRouteState().setState(() {});
+         });
+         Navigator.pop(context);
+       }
+       else if(value.compareTo("401") == 0)
+       {
+         print("Access token invalid");
+       }
+       else if(value.compareTo("401") == 0)
+       {
+         print("Content already exists");
+       }
+       else
+       {
+         print(value);
+       }
+     });
   }
 }
 

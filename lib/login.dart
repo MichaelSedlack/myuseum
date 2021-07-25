@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 import 'package:myuseum/main.dart';
+import 'package:myuseum/rooms.dart';
 import 'package:myuseum/Utils/userInfo.dart';
 import 'package:myuseum/register.dart';
 import 'package:myuseum/forgot_password.dart';
@@ -108,11 +109,13 @@ class _LoginRouteState extends State<LoginRoute> {
       if (output.compareTo('200') == 0) {
         Register.postRegisterGetBody(registerURL, content).then((value) {
           parseLogin(value);
-        });
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyHomePage(title: 'Homepage')),
+        }).whenComplete(() =>
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RoomsRoute()
+              ),
+            )
         );
       } else if (output.compareTo('400') == 0) {
         setState(() {

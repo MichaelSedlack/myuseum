@@ -14,7 +14,7 @@ class _ForgotPasswordRouteState extends State<ForgotPasswordRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Forgot Password'),
       ),
 
       body: Center(

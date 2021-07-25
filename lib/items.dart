@@ -19,6 +19,7 @@ class Items {
     name = newName;
   }
   //image
+  //tags
 }
 
 class ItemsRoute extends StatefulWidget {

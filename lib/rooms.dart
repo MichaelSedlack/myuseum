@@ -84,6 +84,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
             }); //refreshes the list
           },*/
               {
+            //Edit Room Popup
             showDialog(
               context: context,
               builder: (BuildContext context) => AlertDialog(
@@ -96,6 +97,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
                   ),
                   IconButton(
                     icon: new Icon(Icons.delete),
+                    color: Colors.red,
                     onPressed: () => showDialog(
                       context: context,
                       builder: (_) => DeleteRoomDialog(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'package:myuseum/rooms.dart';
+import 'package:myuseum/items.dart';
 import 'package:myuseum/Utils/userInfo.dart';
 
 void main() {
@@ -82,8 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _logout()
-  {
+  void _logout() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => LoginRoute()),
@@ -154,6 +154,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => RoomsRoute()),
+                );
+              },
+            ),
+            TextButton(
+              child: Text('items page'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ItemsRoute()),
                 );
               },
             ),

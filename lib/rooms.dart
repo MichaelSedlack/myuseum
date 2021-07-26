@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 import 'package:myuseum/collections.dart';
 import 'package:myuseum/main.dart';
 import 'package:myuseum/login.dart';
@@ -69,6 +70,8 @@ class _RoomsRouteState extends State<RoomsRoute> {
   }
 
   Widget _buildRow(room) {
+    String changedRoomName = room.name;
+
     return ListTile(
         title: Text(room.name),
         onTap: () {
@@ -98,9 +101,9 @@ class _RoomsRouteState extends State<RoomsRoute> {
                 //content: !EDIT ROOM NAME HERE,
                 actions: <Widget>[
                   TextFormField(
-                    initialValue: room.name,
+                    initialValue: changedRoomName,
                     onChanged: (value) {
-                      room.name = value;
+                      changedRoomName = value;
                     },
                   ),
                   TextButton(

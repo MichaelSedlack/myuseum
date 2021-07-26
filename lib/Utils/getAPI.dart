@@ -131,11 +131,14 @@ class Register {
     return ret;
   }
 
-  static Future<String> putRegisterGetStatus(String url, String content) async{
+  static Future<String> putRegisterGetStatus(String url, Map<String, String> content, String body) async{
     String ret = "";
+    Uri uri = Uri.parse(url);
+    uri = uri.replace(queryParameters: content);
+
     try {
       http.Response response = await http.put(
-          Uri.parse(url), body: utf8.encode(content),
+          uri, body: utf8.encode(body),
           headers:
           {
             "Accept": "Application/json",

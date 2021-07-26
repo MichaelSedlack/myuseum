@@ -42,12 +42,10 @@ class _RoomsRouteState extends State<RoomsRoute> {
     };
     String registerURL = urlBase + "/users/rooms";
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
-      print('Status Code: ' + value);
       if (value.compareTo("200") == 0) {
         Register.getRegisterGetBody(registerURL, content).then((newValue) {
           List rooms = json.decode(newValue);
           _rooms.clear();
-          print(rooms.length);
           for (int i = 0; i < rooms.length; i++) {
             _rooms.add(Room(rooms[i]['name'], rooms[i]['id'], rooms[i]['private'].toString()));
           }
@@ -75,7 +73,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
     return ListTile(
         title: Text(room.name),
         onTap: () {
-          Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),);
+          // Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),);
         },
         trailing: IconButton(
           icon: new Icon(Icons.border_color_rounded),
@@ -128,13 +126,13 @@ class _RoomsRouteState extends State<RoomsRoute> {
                     icon: new Icon(Icons.save),
                     color: colorScheme.primary,
                     onPressed: () {
-                      _editRoom(room.name, room.private);
-                      Navigator.pop(context);
+                      _editRoom(changedRoomName, room.id, room.private);
+                      // Navigator.pop(context);
                     }
                   )
                 ],
               ),
-            );
+            ).whenComplete((){getRooms(); setState(() {});});
           },
         ),
     );
@@ -167,8 +165,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
                   2, //ensures the length includes all rooms with dividers
               itemBuilder: (context, item) {
                 if (item.isOdd) return Divider();
-                return _buildRow(_rooms[(item / 2)
-                    .round()]); //-1 since you can't add the index after building the row
+                return _buildRow(_rooms[(item / 2).round()]); //-1 since you can't add the index after building the row
               }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -209,22 +206,19 @@ class _RoomsRouteState extends State<RoomsRoute> {
     );
   }
 
-  void _editRoom(String roomName, String isPrivate) {
+  void _editRoom(String roomName, String roomId, String isPrivate) {
      String url = urlBase + "/rooms/single";
-     String content =
-         '{"name": "' + roomName + '", "private": ' + isPrivate + '}';
-     Register.putRegisterGetStatus(url, content).then((value) {
+     Map<String, String> content = {'id': roomId};
+     String body = '{"name": "' + roomName + '", "private": ' + isPrivate + '}';
+     Register.putRegisterGetStatus(url, content, body).then((value) {
        if(value.compareTo("200") == 0) {
-         _RoomsRouteState().getRooms().whenComplete(() {
-           _RoomsRouteState().setState(() {});
-         });
          Navigator.pop(context);
        }
        else if(value.compareTo("401") == 0)
        {
          print("Access token invalid");
        }
-       else if(value.compareTo("401") == 0)
+       else if(value.compareTo("409") == 0)
        {
          print("Content already exists");
        }
@@ -266,6 +260,7 @@ class _DeleteRoomDialogState extends State<DeleteRoomDialog> {
           ElevatedButton(
             onPressed: () {
               deleteRoom(widget.roomId);
+              Navigator.pop(context);
               Navigator.pop(context);
             },
             style: ButtonStyle(

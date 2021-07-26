@@ -13,12 +13,18 @@ void setCollectionId(String newId) {
 
 class Items {
   String name = "";
+  String description = "";
+  Map item = <String, String>{};
+  String roomId = "";
   String collectionId = "";
-  Items(String newName) {
+  Items(String newName, String newDescription, Map newItem, String newRoomId,
+      String newCollectionId) {
     name = newName;
+    description = newDescription;
+    item = newItem;
+    roomId = newRoomId;
+    collectionId = newCollectionId;
   }
-  //image
-  //tags
 }
 
 class ItemsRoute extends StatefulWidget {
@@ -31,11 +37,12 @@ class _ItemsRouteState extends State<ItemsRoute> {
   final List<Items> _items = [];
   var index = 0;
 
+//How do I get the UID to find Items?
   void getItems() {
     Map<String, String> content = {
       'id': getId(),
     };
-    String registerURL = urlBase + "/users/items";
+    String registerURL = urlBase + "/users";
     print(registerURL);
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
       print('Status Code: ' + value);

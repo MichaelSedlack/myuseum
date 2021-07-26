@@ -100,13 +100,11 @@ class _LoginRouteState extends State<LoginRoute> {
     setState(() {
       _loginStatus = 'Logging in';
     });
-    String output = "";
     String registerURL = urlBase + "/users/login";
     String content =
         '{"email": "' + _email + '","password": "' + _password + '"}';
     Register.postRegisterGetStatusCode(registerURL, content).then((value) {
-      output = value;
-      if (output.compareTo('200') == 0) {
+      if (value.compareTo('200') == 0) {
         Register.postRegisterGetBody(registerURL, content).then((value) {
           parseLogin(value);
         }).whenComplete(() =>
@@ -117,13 +115,13 @@ class _LoginRouteState extends State<LoginRoute> {
               ),
             )
         );
-      } else if (output.compareTo('400') == 0) {
+      } else if (value.compareTo('400') == 0) {
         setState(() {
           _loginStatus = 'Wrong password or email';
         });
       } else {
         setState(() {
-          _loginStatus = 'error: ' + output;
+          _loginStatus = 'error: ' + value;
         });
       }
     });
@@ -135,6 +133,7 @@ class _LoginRouteState extends State<LoginRoute> {
 }
 
 class Login {
+  String accessToken = "", id = "", email = "";
   Login(String newAccessToken, String newId, String newEmail) {
     setAccessToken(newAccessToken);
     setId(newId);
@@ -142,6 +141,9 @@ class Login {
   }
 
   Login.fromJson(Map<String, dynamic> json) {
+    accessToken = json['accessToken'] as String;
+    id = json['id'] as String;
+    email = json['email'] as String;
     Login(json['accessToken'] as String, json['id'] as String,
         json['email'] as String);
   }

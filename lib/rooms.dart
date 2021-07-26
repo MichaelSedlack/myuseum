@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:convert';
+import 'package:myuseum/collections.dart';
 import 'package:myuseum/main.dart';
 import 'package:myuseum/login.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,9 @@ class _RoomsRouteState extends State<RoomsRoute> {
   Widget _buildRow(room) {
     return ListTile(
         title: Text(room.name),
+        onTap: () {
+          Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),);
+        },
         trailing: IconButton(
           icon: new Icon(Icons.border_color_rounded),
           tooltip: 'Edit Room',
@@ -130,9 +134,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
             );
           },
         ),
-        onTap: () {
-          //Edit the room name
-        });
+    );
   }
 
   Widget build(BuildContext context) {

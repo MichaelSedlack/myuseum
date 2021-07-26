@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:myuseum/login.dart';
 import 'package:flutter/material.dart';
@@ -5,23 +6,26 @@ import 'package:myuseum/Utils/userInfo.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 
 String roomId = "";
-void setRoomId(String newId)
-{
-  roomId = newId;
-}
-
 
 class Collections {
-  String name = "";
-  List <String> keys = [];
-  String private = "";
-  String roomId = "";
-  Collections(String newName) {
+  String name = "", private = "", roomId = "", collectionId = "";
+  List <dynamic> keys = [], tags = [];
+  Collections(String newName, List <dynamic> newKeys, String newPrivate, String newRoomId, List <dynamic> newTags, String newCollectionId) {
     name = newName;
+    keys = newKeys;
+    private = newPrivate;
+    roomId = newRoomId;
+    tags = newTags;
+    collectionId = newCollectionId;
   }
 }
 
 class CollectionsRoute extends StatefulWidget {
+  final String roomId;
+
+  const CollectionsRoute(
+      {Key? key, required this.roomId})
+      : super(key: key);
   @override
   _CollectionsRouteState createState() => _CollectionsRouteState();
 }
@@ -31,34 +35,42 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
   final List<Collections> _collections = [];
   var index = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    getCollections();
+  }
+
   void getCollections() {
     Map<String, String> content = {
-      'id': getId(),
+      'id': widget.roomId,
     };
-    String registerURL = urlBase + "/users/collections";
-    print(registerURL);
+    String registerURL = urlBase + "/rooms/single";
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
       print('Status Code: ' + value);
       print(getId());
       if (value.compareTo("200") == 0) {
         Register.getRegisterGetBody(registerURL, content).then((value) {
-          print('Value ' + value);
-          for (int i = 0; i < value.length; i++) {}
+          _collections.clear();
+          Map<String, dynamic> collections = json.decode(value);
+          for(int i = 0; i < collections['collections'].length; i++)
+          {
+            _collections.add(Collections(collections['collections'][i]['name'], collections['collections'][i]['keys'], collections['collections'][i]['private'].toString(), collections['collections'][i]['roomID'], collections['collections'][i]['tags'], collections['collections'][i]['id']));
+          }
+          setState(() {});
         });
       }
     });
   }
 
   Widget _buildList() {
-    getCollections();
     return ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: _collections.length *
             2, //ensures the length includes all rooms with dividers
         itemBuilder: (context, item) {
           if (item.isOdd) return Divider();
-          index++; //increases the index so that all rooms are gone through
-          return _buildRow(_collections[index - 1]); //-1 since you can't add the index after building the row
+          return _buildRow(_collections[(item/2).round()]); //-1 since you can't add the index after building the row
         });
   }
 
@@ -81,11 +93,8 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
           PopupMenuButton<String>(
             onSelected: handleClick,
             itemBuilder: (BuildContext context) {
-              return {'Logout'}.map((String choice) {
-                //resets the login values to ensure you aren't still logged in
-                id = "";
-                email = "";
-                accessToken = "";
+              return {'Logout', 'Refresh'}.map((String choice) {
+
                 return PopupMenuItem<String>(
                   value: choice,
                   child: Text(choice),
@@ -122,6 +131,10 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
   }
 
   void _logout() {
+    //resets the login values to ensure you aren't still logged in
+    id = "";
+    email = "";
+    accessToken = "";
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => LoginRoute()),
@@ -183,7 +196,7 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
               _addCollection();
               Navigator.pop(context);
             },
-          )
+          ),
         ],
       ),
     );

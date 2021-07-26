@@ -73,7 +73,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
     return ListTile(
         title: Text(room.name),
         onTap: () {
-          // Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),);
+          Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),);
         },
         trailing: IconButton(
           icon: new Icon(Icons.border_color_rounded),

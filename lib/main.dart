@@ -157,15 +157,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-            TextButton(
-              child: Text('items page'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ItemsRoute()),
-                );
-              },
-            ),
           ],
         ),
       ),

@@ -52,7 +52,7 @@ class _ItemsRouteState extends State<ItemsRoute> {
     Map<String, String> content = {
       'id': widget.collectionId,
     };
-    String registerURL = urlBase + "/item/single";
+    String registerURL = urlBase + "/collections/single";
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
       print('Status Code: ' + value);
       print(getId());

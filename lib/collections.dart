@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:myuseum/items.dart';
 import 'package:myuseum/login.dart';
 import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/userInfo.dart';
@@ -79,7 +80,7 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
         title: Text(collection.name),
         trailing: Icon(Icons.edit),
         onTap: () {
-          //Edit the room name
+          Navigator.push(context,MaterialPageRoute(builder: (context) => ItemsRoute(collectionId: collection.collectionId)));
         });
   }
 

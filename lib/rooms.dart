@@ -107,32 +107,37 @@ class _RoomsRouteState extends State<RoomsRoute> {
                       changedRoomName = value;
                     },
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        tooltip: 'Delete Room',
+                        icon: new Icon(Icons.delete),
+                        color: colorScheme.error,
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (_) => DeleteRoomDialog(
+                              roomName: room.name, roomId: room.id),
+                        ).whenComplete(() {
+                          getRooms();
+                          setState(() {});
+                        }),
+                      ),
+                      IconButton(
+                          tooltip: 'Save Room Edit',
+                          icon: new Icon(Icons.save),
+                          color: colorScheme.primary,
+                          onPressed: () {
+                            _editRoom(changedRoomName, room.id, room.private);
+                            // Navigator.pop(context);
+                          }
+                      ),
+                    ],
+                  ),
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'Close'),
                     child: const Text('Close'),
                   ),
-                  IconButton(
-                    tooltip: 'Delete Room',
-                    icon: new Icon(Icons.delete),
-                    color: colorScheme.error,
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (_) => DeleteRoomDialog(
-                          roomName: room.name, roomId: room.id),
-                    ).whenComplete(() {
-                      getRooms();
-                      setState(() {});
-                    }),
-                  ),
-                  IconButton(
-                    tooltip: 'Save Room Edit',
-                    icon: new Icon(Icons.save),
-                    color: colorScheme.primary,
-                    onPressed: () {
-                      _editRoom(changedRoomName, room.id, room.private);
-                      // Navigator.pop(context);
-                    }
-                  )
                 ],
               ),
             ).whenComplete((){getRooms(); setState(() {});});

@@ -78,7 +78,7 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
         title: Text(collection.name),
         trailing: Icon(Icons.edit),
         onTap: () {
-          Navigator.push(context,MaterialPageRoute(builder: (context) => ItemsRoute(collectionId: collection.collectionId)));
+          Navigator.push(context,MaterialPageRoute(builder: (context) => ItemsRoute(roomId: widget.roomId,collectionId: collection.collectionId)));
         });
   }
 

@@ -29,9 +29,9 @@ class Items {
 
 //Do we need the room ID for this?
 class ItemsRoute extends StatefulWidget {
-  final String collectionId;
+  final String collectionId, roomId;
 
-  const ItemsRoute({Key? key, required this.collectionId}) : super(key: key);
+  const ItemsRoute({Key? key, required this.roomId, required this.collectionId}) : super(key: key);
   @override
   _ItemsRouteState createState() => _ItemsRouteState();
 }
@@ -53,9 +53,9 @@ class _ItemsRouteState extends State<ItemsRoute> {
       'id': widget.collectionId,
     };
     String registerURL = urlBase + "/collections/single";
+    print(registerURL);
     Register.getRegisterGetStatusCode(registerURL, content).then((value) {
       print('Status Code: ' + value);
-      print(getId());
       if (value.compareTo("200") == 0) {
         Register.getRegisterGetBody(registerURL, content).then((value) {
           _items.clear();

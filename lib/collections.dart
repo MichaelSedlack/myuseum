@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/userInfo.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 
-String roomId = "";
-
 class Collections {
   String name = "", private = "", roomId = "", collectionId = "";
   List <dynamic> keys = [], tags = [];
@@ -114,7 +112,7 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
                 return NewCollectionDialog(roomId: widget.roomId);
               }).whenComplete(() {setState(() {getCollections();});});
         },
-        tooltip: 'Increment',
+        tooltip: 'Add Collection',
         child: Icon(Icons.add),
       ),
     );

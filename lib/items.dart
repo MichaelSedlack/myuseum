@@ -128,7 +128,7 @@ class _ItemsRouteState extends State<ItemsRoute> {
                 return NewItemDialog();
               });
         },
-        tooltip: 'Increment',
+        tooltip: 'Add Item',
         child: Icon(Icons.add),
       ),
     );

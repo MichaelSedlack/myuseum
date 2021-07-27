@@ -12,18 +12,16 @@ void setCollectionId(String newId) {
 }
 
 class Items {
-  String name = "", description = "", itemId = "", collectionId = "";
-  List<dynamic> keys = [], tags = [];
-  Items(String newName, String newDescription, List<dynamic> newKeys,
-      List<dynamic> newTags, String newItemId, String newCollectionId) {
+  String name = "", description = "", itemId = "", collectionId = "", roomId = "", uid = "";
+  Map<String, dynamic> item = {};
+  Items(String newName, String newDescription, Map<String, dynamic> newItem, String newItemId, String newRoomId, String newCollectionId, String newUid) {
     name = newName;
     description = newDescription;
-    //keys are the values
-    keys = newKeys;
-    //tags are the keys
-    tags = newTags;
+    item = newItem;
     itemId = newItemId;
     collectionId = newCollectionId;
+    roomId = newRoomId;
+    uid = newUid;
   }
 }
 
@@ -61,15 +59,19 @@ class _ItemsRouteState extends State<ItemsRoute> {
           _items.clear();
           Map<String, dynamic> items = json.decode(value);
           for (int i = 0; i < items['items'].length; i++) {
+            print(items['items'][i]);
             _items.add(Items(
                 items['items'][i]['name'],
                 items['items'][i]['description'],
                 //These arent two arrays, these are a map
-                items['items'][i]['keys'],
-                items['items'][i]['tags'],
+                items['items'][i]['item'],
                 /*******************************/
-                items['items'][i]['itemID'],
-                items['items'][i]['collectionId']));
+                items['items'][i]['id'],
+                items['items'][i]['roomID'],
+                items['items'][i]['collectionID'],
+                items['items'][i]['uid']
+                ));
+            print(_items[i].name);
           }
           setState(() {});
         });

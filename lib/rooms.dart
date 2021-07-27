@@ -30,6 +30,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
   //Need to get the list of available rooms from the backend
   final List<Room> _rooms = [];
   var index = 0;
+  bool toggle = false;
   String roomName = "", isPrivate = "false";
 
   @override
@@ -71,7 +72,6 @@ class _RoomsRouteState extends State<RoomsRoute> {
 
   Widget _buildRow(room) {
     String changedRoomName = room.name;
-
     return ListTile(
         title: Text(room.name),
         subtitle: Text(room.collectionCount.toString()),
@@ -106,6 +106,15 @@ class _RoomsRouteState extends State<RoomsRoute> {
                     onChanged: (value) {
                       changedRoomName = value;
                     },
+                  ),
+                  Switch(
+                      value: this.toggle,
+                      onChanged: (value) {
+                        setState(() {
+                          print(toggle);
+                          this.toggle = value;
+                        });
+                      }
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

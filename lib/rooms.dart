@@ -74,7 +74,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
     String changedRoomName = room.name;
     return ListTile(
         title: Text(room.name),
-        subtitle: Text(room.collectionCount.toString()),
+        subtitle: Text(collectionCounter(room)),
         onTap: () {
           Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),).whenComplete(() {getRooms(); setState(() {});});
         },
@@ -106,15 +106,6 @@ class _RoomsRouteState extends State<RoomsRoute> {
                     onChanged: (value) {
                       changedRoomName = value;
                     },
-                  ),
-                  Switch(
-                      value: this.toggle,
-                      onChanged: (value) {
-                        setState(() {
-                          print(toggle);
-                          this.toggle = value;
-                        });
-                      }
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -244,6 +235,14 @@ class _RoomsRouteState extends State<RoomsRoute> {
          print(value);
        }
      });
+  }
+
+  String collectionCounter(dynamic room) {
+    if(room.collectionCount == 1)
+      return "1 collection";
+    if(room.collectionCount > 1)
+      return room.collectionCount.toString() + " collections";
+    return "Empty";
   }
 }
 

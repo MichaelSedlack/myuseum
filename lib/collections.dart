@@ -9,13 +9,15 @@ import 'package:myuseum/Utils/getAPI.dart';
 class Collections {
   String name = "", private = "", roomId = "", collectionId = "";
   List <dynamic> keys = [], tags = [];
-  Collections(String newName, List <dynamic> newKeys, String newPrivate, String newRoomId, List <dynamic> newTags, String newCollectionId) {
+  int itemCount = 0;
+  Collections(String newName, List <dynamic> newKeys, String newPrivate, String newRoomId, List <dynamic> newTags, String newCollectionId, List<dynamic> newItemCount) {
     name = newName;
     keys = newKeys;
     private = newPrivate;
     roomId = newRoomId;
     tags = newTags;
     collectionId = newCollectionId;
+    itemCount = newItemCount.length;
   }
 }
 
@@ -54,7 +56,7 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
           Map<String, dynamic> collections = json.decode(value);
           for(int i = 0; i < collections['collections'].length; i++)
           {
-            _collections.add(Collections(collections['collections'][i]['name'], collections['collections'][i]['keys'], collections['collections'][i]['private'].toString(), collections['collections'][i]['roomID'], collections['collections'][i]['tags'], collections['collections'][i]['id']));
+            _collections.add(Collections(collections['collections'][i]['name'], collections['collections'][i]['keys'], collections['collections'][i]['private'].toString(), collections['collections'][i]['roomID'], collections['collections'][i]['tags'], collections['collections'][i]['id'], collections['collections'][i]['items']));
           }
           setState(() {});
         });
@@ -76,6 +78,7 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
   Widget _buildRow(collection) {
     return ListTile(
         title: Text(collection.name),
+        subtitle: Text(itemCounter(collection)),
         trailing: Icon(Icons.edit),
         onTap: () {
           Navigator.push(context,MaterialPageRoute(builder: (context) => ItemsRoute(roomId: widget.roomId,collectionId: collection.collectionId)));
@@ -138,6 +141,15 @@ class _CollectionsRouteState extends State<CollectionsRoute> {
       context,
       MaterialPageRoute(builder: (context) => LoginRoute()),
     );
+  }
+
+  String itemCounter(dynamic collection)
+  {
+    if(collection.itemCount == 1)
+      return "1 item";
+    if(collection.itemCount > 1)
+      return collection.itemCount.toString() + " items";
+    return "Empty";
   }
 }
 

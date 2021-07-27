@@ -9,13 +9,15 @@ import 'package:myuseum/Utils/userInfo.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 
 class Room {
+  int collectionCount = 0;
   String name = "";
   String id = "";
   String private = "";
-  Room(String newName, String newId, String newPrivate) {
+  Room(String newName, String newId, String newPrivate, List<dynamic> newCollectionCount) {
     name = newName;
     id = newId;
     private = newPrivate;
+    collectionCount = newCollectionCount.length;
   }
 }
 
@@ -47,7 +49,7 @@ class _RoomsRouteState extends State<RoomsRoute> {
           List rooms = json.decode(newValue);
           _rooms.clear();
           for (int i = 0; i < rooms.length; i++) {
-            _rooms.add(Room(rooms[i]['name'], rooms[i]['id'], rooms[i]['private'].toString()));
+            _rooms.add(Room(rooms[i]['name'], rooms[i]['id'], rooms[i]['private'].toString(), rooms[i]['collections']));
           }
           setState(() {});
         });
@@ -72,8 +74,9 @@ class _RoomsRouteState extends State<RoomsRoute> {
 
     return ListTile(
         title: Text(room.name),
+        subtitle: Text(room.collectionCount.toString()),
         onTap: () {
-          Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),);
+          Navigator.push(context,MaterialPageRoute(builder: (context) => CollectionsRoute(roomId: room.id)),).whenComplete(() {getRooms(); setState(() {});});
         },
         trailing: IconButton(
           icon: new Icon(Icons.border_color_rounded),

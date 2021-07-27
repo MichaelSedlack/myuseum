@@ -204,6 +204,10 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
   }
 
   void _addCollection() {
+    for(int i = 0; i < keys.length; i++)
+    {
+      keys[i] = '"' + keys[i] + '"';
+    }
     String url = urlBase + "/collections/create";
     String content = '{"name": "' + collectionName + '", "keys": ' + keys.toString() + ',  "private": ' + isPrivate + ', "roomID": "' + widget.roomId + '"}';
     print(content);

@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:myuseum/Utils/userInfo.dart';
 import 'package:myuseum/Utils/getAPI.dart';
 
-//lay out items in two columns and infinite rows
-//How to click and open up a specific item
-
 String collectionId = "";
 void setCollectionId(String newId) {
   collectionId = newId;
@@ -21,7 +18,9 @@ class Items {
       List<dynamic> newTags, String newItemId, String newCollectionId) {
     name = newName;
     description = newDescription;
+    //keys are the values
     keys = newKeys;
+    //tags are the keys
     tags = newTags;
     itemId = newItemId;
     collectionId = newCollectionId;
@@ -48,6 +47,7 @@ class _ItemsRouteState extends State<ItemsRoute> {
     getItems();
   }
 
+  //Need to get the tags from its collection here
   void getItems() {
     Map<String, String> content = {
       'id': widget.collectionId,
@@ -64,8 +64,10 @@ class _ItemsRouteState extends State<ItemsRoute> {
             _items.add(Items(
                 items['items'][i]['name'],
                 items['items'][i]['description'],
+                //These arent two arrays, these are a map
                 items['items'][i]['keys'],
                 items['items'][i]['tags'],
+                /*******************************/
                 items['items'][i]['itemID'],
                 items['items'][i]['collectionId']));
           }
@@ -96,6 +98,7 @@ class _ItemsRouteState extends State<ItemsRoute> {
         });
   }
 
+//Main content
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -230,10 +233,9 @@ class NewItemDialog extends StatefulWidget {
   _NewItemDialogState createState() => new _NewItemDialogState();
 }
 
+//Adding a new item
 class _NewItemDialogState extends State<NewItemDialog> {
-  bool isSwitched = false;
   String description = "", itemName = "";
-  List<String> keys = [];
   List<String> tags = [];
 
   Widget build(BuildContext context) {
@@ -254,6 +256,26 @@ class _NewItemDialogState extends State<NewItemDialog> {
             },
             decoration: InputDecoration(labelText: 'Item name'),
           ),
+          TextFormField(
+            validator: (value) {
+              if (value == null || value.isEmpty)
+                return 'Please enter item description';
+              else
+                return null;
+            },
+            onChanged: (value) {
+              description = value;
+            },
+            decoration: InputDecoration(labelText: 'Item description'),
+          ),
+          //try and loop to print out tags here
+
+          TextField(
+              decoration: InputDecoration(
+                  labelText: 'Tag values, separate with a ", "'),
+              onChanged: (value) {
+                tags = value.split(', ');
+              }),
           ElevatedButton(
             child: Text('Ok'),
             onPressed: () {
@@ -270,14 +292,14 @@ class _NewItemDialogState extends State<NewItemDialog> {
 
   void _addItem() {
     String url = urlBase + "/items/create";
+    //var map2 = {};
+    // list.forEach((tags) => map2[tag] = key);
     String content = '{"name": "' +
         itemName +
         '", "description": ' +
         description +
-        ', "keys": ' +
-        keys.toString() +
-        ',  "tags": ' +
-        tags.toString() +
+        ', "item": ' +
+        tags.toString() + //Change this to be a map
         ', "collectionID": ' +
         collectionId +
         '}';
